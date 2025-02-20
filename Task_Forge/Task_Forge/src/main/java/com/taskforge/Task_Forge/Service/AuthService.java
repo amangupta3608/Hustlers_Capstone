@@ -1,9 +1,10 @@
 package com.taskforge.Task_Forge.Service;
 
-import com.taskforge.Task_Forge.Exceptions.InvalidCredentialsExceptions;
+import com.taskforge.Task_Forge.Exceptions.InvalidCredentialsException; // Fixed Exception Name
 import com.taskforge.Task_Forge.Exceptions.UserAlreadyExistsException;
 import com.taskforge.Task_Forge.Model.User;
 import com.taskforge.Task_Forge.Repository.UserRepository;
+import com.taskforge.Task_Forge.Utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,29 +27,36 @@ public class AuthService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    public User signup(User user){
-        if(userRepository.existsByUsername(user.getUsername())){
+    public User signup(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
             throw new UserAlreadyExistsException("Username already exists");
         }
-        if(userRepository.existsByEmail(user.getEmail())){
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserAlreadyExistsException("Email already exists");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    public String login(String username, String password){
+    public String login(String username, String password) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return jwtUtils.generateJwtToken(authentication);
-        }catch (BadCredentialsException e){
-            throw new InvalidCredentialsExceptions("Invalid username or password")
+        } catch (BadCredentialsException e) {
+            throw new InvalidCredentialsException("Invalid username or password"); // Fixed Exception Name
         }
     }
 
-    public Optional<User> getProfile(){
+    public Optional<User> getProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return Optional.empty();//
+        }
+
         String username = authentication.getName();
         return userRepository.findByUsername(username);
     }

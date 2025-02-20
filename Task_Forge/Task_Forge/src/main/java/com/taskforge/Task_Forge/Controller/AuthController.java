@@ -1,6 +1,6 @@
 package com.taskforge.Task_Forge.Controller;
 
-import com.taskforge.Task_Forge.Exceptions.InvalidCredentialsExceptions;
+import com.taskforge.Task_Forge.Exceptions.InvalidCredentialsException;
 import com.taskforge.Task_Forge.Exceptions.UserAlreadyExistsException;
 import com.taskforge.Task_Forge.Model.User;
 import com.taskforge.Task_Forge.Service.AuthService;
@@ -14,8 +14,9 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+
     @PostMapping("/signup")
-    public ResponseEntity<?> singup(@RequestBody User user){
+    public ResponseEntity<?> signup(@RequestBody User user){
         try {
             return ResponseEntity.ok(authService.signup(user));
         }catch (UserAlreadyExistsException e){
@@ -28,7 +29,7 @@ public class AuthController {
         try{
             String jwt = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
             return ResponseEntity.ok(new JwtReponse(jwt));
-        }catch(InvalidCredentialsExceptions e){
+        }catch(InvalidCredentialsException e){
             return ResponseEntity.status(401).body(e.getMessage());
         }
     }

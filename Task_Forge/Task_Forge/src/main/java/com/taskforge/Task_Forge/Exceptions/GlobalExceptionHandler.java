@@ -13,8 +13,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
-    @ExceptionHandler(InvalidCredentialsExceptions.class)
-    public ResponseEntity<String> handleInvalidCredentials(InvalidCredentialsExceptions ex){
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<String> handleInvalidCredentials(InvalidCredentialsException ex){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
