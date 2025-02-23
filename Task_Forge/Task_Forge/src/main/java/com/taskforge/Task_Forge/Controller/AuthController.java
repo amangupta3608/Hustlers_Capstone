@@ -2,6 +2,7 @@ package com.taskforge.Task_Forge.Controller;
 
 import com.taskforge.Task_Forge.Exceptions.InvalidCredentialsException;
 import com.taskforge.Task_Forge.Exceptions.UserAlreadyExistsException;
+import com.taskforge.Task_Forge.Exceptions.UserNotFoundException;
 import com.taskforge.Task_Forge.Model.User;
 import com.taskforge.Task_Forge.Service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class AuthController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody User user){
+    public ResponseEntity<String> signup(@RequestBody User user){
         try {
             return ResponseEntity.ok(authService.signup(user));
         }catch (UserAlreadyExistsException e){
@@ -25,12 +26,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password){
         try{
-            String jwt = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
-            return ResponseEntity.ok(new JwtReponse(jwt));
-        }catch(InvalidCredentialsException e){
-            return ResponseEntity.status(401).body(e.getMessage());
+            return ResponseEntity.ok(authService.login(email, password));
+        }catch (UserNotFoundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

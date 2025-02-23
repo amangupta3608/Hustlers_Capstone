@@ -11,43 +11,35 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AuthService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private AuthenticationManager authenticationManager;
+
     @Autowired
     private JwtUtils jwtUtils;
 
-    public User signup(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new UserAlreadyExistsException("Username already exists");
-        }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new UserAlreadyExistsException("Email already exists");
-        }
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public String signup(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        userRepository.save(user);
+        return "User Registered Successfully";
     }
 
-    public String login(String username, String password) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            return jwtUtils.generateJwtToken(authentication);
-        } catch (BadCredentialsException e) {
-            throw new InvalidCredentialsException("Invalid username or password"); // Fixed Exception Name
+    public String login(String email, String password) {
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isPresent() && passwordEncoder.matches(password, existingUser.get().getPassword())){
+            return jwtUtils.generateToken(existingUser.get().getId(), email);
         }
+        throw new InvalidCredentialsException("Invalid Credentials");
     }
 
     public Optional<User> getProfile() {
@@ -58,6 +50,6 @@ public class AuthService {
         }
 
         String username = authentication.getName();
-        return userRepository.findByUsername(username);
+        return userRepository.findByEmail(username);
     }
 }
