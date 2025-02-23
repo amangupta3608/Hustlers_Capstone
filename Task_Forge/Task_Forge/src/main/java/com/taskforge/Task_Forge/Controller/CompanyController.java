@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/companies")
 public class CompanyController {
@@ -19,9 +21,9 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCompany(@PathVariable Long id){
+    public ResponseEntity<?> getCompany(@PathVariable UUID id){
         try {
-            return ResponseEntity.ok(companyService.getCompay(id));
+            return ResponseEntity.ok(companyService.getCompanyById(id));
         }catch (CompanyNotFoundExceptions e){
             return ResponseEntity.notFound().build();
         }
