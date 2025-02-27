@@ -1,3 +1,19 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+# Ignore IDE-specific files
+.idea/
+*.iml
+
+# Ignore compiled class files
+*.class
+
+# Ignore Maven target directory
+target/
+
+# Ignore logs
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
