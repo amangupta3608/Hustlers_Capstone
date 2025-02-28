@@ -1,0 +1,5 @@
+# Created at 2025-02-28T19:56:08.779
+Boot Manifest-JAR contains absolute paths in classpath 'G:\cccccccc1\desktop\vanshika\project\Taskforge\Task_Forge\Task_Forge\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

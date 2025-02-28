@@ -1,4 +1,4 @@
-package com.mailservice;
+package com.taskforge.Task_Forge.MailService;
 
 import com.taskforge.Task_Forge.MailService.RegisterMailService;
 import com.taskforge.Task_Forge.MailService.AuthenticateMailService;
