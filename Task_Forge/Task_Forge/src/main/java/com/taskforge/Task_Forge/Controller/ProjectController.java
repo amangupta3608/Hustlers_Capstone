@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,21 +23,22 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<Project> getAllProjects(){
-        return ResponseEntity.ok((Project) projectService.getAllProjects());
+    public ResponseEntity<List<Project>> getAllProjects(){
+        return ResponseEntity.ok(projectService.getAllProjects());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Project>> getGetProjectById(@PathVariable UUID id){
+    public ResponseEntity<Project> getProjectById(@PathVariable UUID id){
         try {
-            return ResponseEntity.ok(projectService.getProjectById(id));
+            Project project = projectService.getProjectById(id);
+            return ResponseEntity.ok(project);
         }catch(ProjectNotFoundExceptions e){
             return ResponseEntity.notFound().build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProject(@PathVariable UUID id, @RequestBody Project project){
+    public ResponseEntity<Project> updateProject(@PathVariable UUID id, @RequestBody Project project){
         try {
             return ResponseEntity.ok(projectService.updateProject(id, project));
         }catch (ProjectNotFoundExceptions e){
@@ -46,7 +47,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProject(@PathVariable UUID id){
+    public ResponseEntity<Void> deleteProject(@PathVariable UUID id){
         try {
             projectService.deleteProject(id);
             return ResponseEntity.noContent().build();

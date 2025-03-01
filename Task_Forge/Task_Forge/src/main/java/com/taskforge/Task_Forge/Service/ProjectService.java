@@ -8,9 +8,9 @@ import com.taskforge.Task_Forge.Repository.CompanyRepository;
 import com.taskforge.Task_Forge.Repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,8 +22,10 @@ public class ProjectService {
     private CompanyRepository companyRepository;
 
     public Project createProject(UUID companyId, Project project){
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new CompanyNotFoundExceptions("Company not found"));
+        Company company = companyRepository.findById(companyId).orElse(null);
+        if(company == null){
+            throw new CompanyNotFoundExceptions("Company not found");
+        }
         project.setCompany(company);
         return projectRepository.save(project);
     }
@@ -32,25 +34,33 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Optional<Project> getProjectById(UUID id){
-        return projectRepository.findById(id);
+    public Project getProjectById(UUID id){
+        Project project = projectRepository.findById(id).orElse(null);
+        if(project == null){
+            throw new ProjectNotFoundExceptions("Project not found");
+        }
+        return project;
     }
 
     public List<Project> getProjectsByCompany(UUID companyId){
         return projectRepository.findByCompanyId(companyId);
     }
 
+    @Transactional
     public Project updateProject(UUID projectId, Project updatedProject){
-        Project existingProject = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundExceptions("Project not found"));
+        Project existingProject = projectRepository.findById(projectId).orElse(null);
+        if (existingProject == null) {
+            throw new ProjectNotFoundExceptions("Project not found");
+        }
         existingProject.setName(updatedProject.getName());
         return projectRepository.save(existingProject);
     }
 
-    public void deleteProject(UUID projectid){
-        if(!projectRepository.existsById(projectid)){
+    @Transactional
+    public void deleteProject(UUID projectId){
+        if(!projectRepository.existsById(projectId)){
             throw new ProjectNotFoundExceptions("Project not found");
         }
-        projectRepository.deleteById(projectid);
+        projectRepository.deleteById(projectId);
     }
 }

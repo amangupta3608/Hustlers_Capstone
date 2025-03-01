@@ -1,11 +1,10 @@
 package com.taskforge.Task_Forge.Model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import org.hibernate.validator.constraints.UUID;
-import org.springframework.scheduling.config.Task;
-
 import java.util.List;
+import lombok.Data;
+import java.util.UUID;
+import com.taskforge.Task_Forge.Model.Task;
 
 @Entity
 @Data
@@ -21,6 +20,6 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Task> tasks;
 }

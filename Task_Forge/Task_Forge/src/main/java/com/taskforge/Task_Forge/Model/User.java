@@ -1,10 +1,11 @@
 package com.taskforge.Task_Forge.Model;
 
+import com.taskforge.Task_Forge.ENUM.Role; // Correct import here
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.validator.constraints.UUID;
 
-import javax.management.relation.Role;
+import java.util.UUID;
+
 
 @Entity
 @Data
@@ -24,5 +25,5 @@ public class User {
     private Company company;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role; // Now using the correct Role enum
 }

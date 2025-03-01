@@ -2,12 +2,12 @@ package com.taskforge.Task_Forge.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.validator.constraints.UUID;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Table(name = "Companies")
+@Table(name = "companies")
 @Data
 public class Company {
     @Id

@@ -11,4 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
     List<Project> findByCompanyId(UUID companyId);
+//    Project findById(UUID id);
+    Project findByName(String name);
 }

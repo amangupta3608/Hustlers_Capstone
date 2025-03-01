@@ -5,6 +5,7 @@ import com.taskforge.Task_Forge.Model.Company;
 import com.taskforge.Task_Forge.Repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,14 +20,19 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
-    public Optional<Company> getCompanyById(UUID id){
-        return companyRepository.findById(id);
+    public Company getCompanyById(UUID id){
+        Company company = companyRepository.findById(id).orElse(null);
+        if(company == null){
+            throw new CompanyNotFoundExceptions("Company not found with id: " + id);
+        }
+        return company;
     }
 
     public Company createCompany(Company company){
         return companyRepository.save(company);
     }
 
+    @Transactional
     public void deleteCompany(UUID id){
         if(!companyRepository.existsById(id)){
             throw new CompanyNotFoundExceptions("Company Not Found!");

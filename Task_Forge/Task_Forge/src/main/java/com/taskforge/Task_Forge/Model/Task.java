@@ -1,8 +1,9 @@
 package com.taskforge.Task_Forge.Model;
 
+import com.taskforge.Task_Forge.ENUM.TaskStatus; // Import the enum
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.validator.constraints.UUID;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tasks")
@@ -16,8 +17,9 @@ public class Task {
     @Column(nullable = false)
     private String title;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status; //To-Do, In Progress, Done
+    private TaskStatus status; // Changed to TaskStatus enum
 
     @ManyToOne
     @JoinColumn(name = "project_id")

@@ -18,13 +18,15 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                // Use getRoleName() since user.getRole() is of type javax.management.relation.Role
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().getRoleName()))
-        );
+        User user = userRepository.findByEmail(email);
+
+        if(user == null){
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .authorities(Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))) // Corrected line
+                .build();
     }
 }

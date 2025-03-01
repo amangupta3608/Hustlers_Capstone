@@ -35,18 +35,18 @@ public class AuthService {
     }
 
     public String login(String email, String password) {
-        Optional<User> existingUser = userRepository.findByEmail(email);
-        if (existingUser.isPresent() && passwordEncoder.matches(password, existingUser.get().getPassword())){
-            return jwtUtils.generateToken(existingUser.get().getId(), email);
+        User existingUser = userRepository.findByEmail(email);
+        if (existingUser != null && passwordEncoder.matches(password, existingUser.getPassword())){
+            return jwtUtils.generateToken(existingUser.getId(), email);
         }
         throw new InvalidCredentialsException("Invalid Credentials");
     }
 
-    public Optional<User> getProfile() {
+    public User getProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            return Optional.empty();//
+            return null;
         }
 
         String username = authentication.getName();
