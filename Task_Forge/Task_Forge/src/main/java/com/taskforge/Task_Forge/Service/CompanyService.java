@@ -1,42 +1,45 @@
 package com.taskforge.Task_Forge.Service;
 
-import com.taskforge.Task_Forge.Exceptions.CompanyNotFoundExceptions;
+import com.taskforge.Task_Forge.DTO.CompanyRequest;
 import com.taskforge.Task_Forge.Model.Company;
+import com.taskforge.Task_Forge.Model.User;
 import com.taskforge.Task_Forge.Repository.CompanyRepository;
+import com.taskforge.Task_Forge.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Service
 public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
+    private final UserRepository userRepository;
 
-    public List<Company> getAllCompanies(){
-        return companyRepository.findAll();
+    public CompanyService(CompanyRepository companyRepository, UserRepository userRepository) {
+        this.companyRepository = companyRepository;
+        this.userRepository = userRepository;
     }
 
-    public Company getCompanyById(UUID id){
-        Company company = companyRepository.findById(id).orElse(null);
-        if(company == null){
-            throw new CompanyNotFoundExceptions("Company not found with id: " + id);
-        }
-        return company;
-    }
+   public Company createCompany(CompanyRequest request){
+       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+       String email = auth.getName(); // Logged in User's email
 
-    public Company createCompany(Company company){
-        return companyRepository.save(company);
-    }
+       User user = userRepository.findByEmail(email)
+               .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-    @Transactional
-    public void deleteCompany(UUID id){
-        if(!companyRepository.existsById(id)){
-            throw new CompanyNotFoundExceptions("Company Not Found!");
-        }
-        companyRepository.deleteById(id);
-    }
+       if(companyRepository.findByName(request.getName()).isPresent()){
+           throw new IllegalArgumentException("Company with this name already exist!");
+       }
+
+       Company company = new Company();
+       company.setName(request.getName());
+       company.setDescription(request.getDescription());
+       company.setCreatedBy(user);
+       company.setCreatedAt(LocalDateTime.now());
+
+       return companyRepository.save(company);
+   }
 }
