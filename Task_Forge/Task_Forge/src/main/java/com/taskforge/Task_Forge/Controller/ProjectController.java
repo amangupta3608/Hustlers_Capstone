@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
@@ -15,21 +18,27 @@ public class ProjectController {
     private ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<?> createProject(@RequestBody Project project){
-        return ResponseEntity.ok(projectService.createProject(project));
+    public ResponseEntity<Project> createProject(@RequestParam UUID companyId, @RequestBody Project project){
+        return ResponseEntity.ok(projectService.createProject(companyId, project));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Project>> getAllProjects(){
+        return ResponseEntity.ok(projectService.getAllProjects());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProject(@PathVariable Long id){
+    public ResponseEntity<Project> getProjectById(@PathVariable UUID id){
         try {
-            return ResponseEntity.ok(projectService.getProject(id));
+            Project project = projectService.getProjectById(id);
+            return ResponseEntity.ok(project);
         }catch(ProjectNotFoundExceptions e){
             return ResponseEntity.notFound().build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProject(@PathVariable Long id, @RequestBody Project project){
+    public ResponseEntity<Project> updateProject(@PathVariable UUID id, @RequestBody Project project){
         try {
             return ResponseEntity.ok(projectService.updateProject(id, project));
         }catch (ProjectNotFoundExceptions e){
@@ -38,7 +47,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProject(@PathVariable Long id){
+    public ResponseEntity<Void> deleteProject(@PathVariable UUID id){
         try {
             projectService.deleteProject(id);
             return ResponseEntity.noContent().build();

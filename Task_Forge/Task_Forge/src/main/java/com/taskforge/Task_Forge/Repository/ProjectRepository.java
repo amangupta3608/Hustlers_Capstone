@@ -2,6 +2,15 @@ package com.taskforge.Task_Forge.Repository;
 
 import com.taskforge.Task_Forge.Model.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ProjectRepository extends JpaRepository<Project, Long> {
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+public interface ProjectRepository extends JpaRepository<Project, UUID> {
+    List<Project> findByCompanyId(UUID companyId);
+//    Project findById(UUID id);
+    Project findByName(String name);
 }
