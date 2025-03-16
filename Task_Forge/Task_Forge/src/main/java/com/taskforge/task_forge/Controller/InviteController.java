@@ -1,6 +1,6 @@
-package com.taskforge.Task_Forge.Controller;
+package com.taskforge.task_forge.Controller;
 
-import com.taskforge.Task_Forge.MailService.MailService;
+import com.taskforge.task_forge.MailService.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

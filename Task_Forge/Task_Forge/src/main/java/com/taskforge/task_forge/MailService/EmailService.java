@@ -1,4 +1,4 @@
-package com.taskforge.Task_Forge.MailService;
+package com.taskforge.task_forge.MailService;
 
 import lombok.Getter;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.taskforge.Task_Forge.MailService;
+package com.taskforge.task_forge.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;

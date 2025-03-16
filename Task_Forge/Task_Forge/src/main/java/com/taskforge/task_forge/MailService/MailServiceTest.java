@@ -1,9 +1,9 @@
-package com.taskforge.Task_Forge.MailService;
+package com.taskforge.task_forge.MailService;
 
-import com.taskforge.Task_Forge.MailService.RegisterMailService;
-import com.taskforge.Task_Forge.MailService.AuthenticateMailService;
-import com.taskforge.Task_Forge.MailService.CreateCompanyMailService;
-import com.taskforge.Task_Forge.MailService.CreateProjectMailService;
+import com.taskforge.task_forge.MailService.RegisterMailService;
+import com.taskforge.task_forge.MailService.AuthenticateMailService;
+import com.taskforge.task_forge.MailService.CreateCompanyMailService;
+import com.taskforge.task_forge.MailService.CreateProjectMailService;
 
 
 public class MailServiceTest {

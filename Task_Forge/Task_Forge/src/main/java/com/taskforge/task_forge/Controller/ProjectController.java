@@ -1,14 +1,15 @@
-package com.taskforge.Task_Forge.Controller;
+package com.taskforge.task_forge.Controller;
 
-import com.taskforge.Task_Forge.Exceptions.ProjectNotFoundExceptions;
-import com.taskforge.Task_Forge.Model.Project;
-import com.taskforge.Task_Forge.Service.ProjectService;
+import com.taskforge.task_forge.Exceptions.ProjectNotFoundExceptions;
+import com.taskforge.task_forge.Model.Project;
+import com.taskforge.task_forge.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.List;
 
 @RestController
 @RequestMapping("/projects")

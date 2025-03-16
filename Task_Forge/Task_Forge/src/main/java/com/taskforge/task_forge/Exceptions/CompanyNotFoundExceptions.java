@@ -1,4 +1,4 @@
-package com.taskforge.Task_Forge.Exceptions;
+package com.taskforge.task_forge.Exceptions;
 
 public class CompanyNotFoundExceptions extends RuntimeException{
     public CompanyNotFoundExceptions(String message){

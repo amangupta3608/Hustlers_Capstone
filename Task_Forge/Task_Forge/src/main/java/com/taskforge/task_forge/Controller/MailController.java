@@ -11,6 +11,7 @@ public class MailController {
 
     @PostMapping("/sendOTP")
     public Map<String, String> sendOTP(@RequestParam String email) {
+        AuthenticateMailService AuthenticateMailService;
         String otp = AuthenticateMailService.generateOTP(); // Generate OTP
         AuthenticateMailService.sendOTP(email, otp); // Send OTP
 
@@ -20,4 +21,3 @@ public class MailController {
         return response;
     }
 }
-

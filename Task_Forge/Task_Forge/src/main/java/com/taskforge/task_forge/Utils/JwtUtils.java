@@ -1,4 +1,4 @@
-package com.taskforge.Task_Forge.Utils;
+package com.taskforge.task_forge.Utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

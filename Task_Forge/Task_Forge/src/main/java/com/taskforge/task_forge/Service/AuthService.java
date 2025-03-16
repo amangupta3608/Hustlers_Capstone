@@ -1,55 +1,57 @@
-package com.taskforge.Task_Forge.Service;
+package com.taskforge.task_forge.Service;
 
-import com.taskforge.Task_Forge.Exceptions.InvalidCredentialsException; // Fixed Exception Name
-import com.taskforge.Task_Forge.Exceptions.UserAlreadyExistsException;
-import com.taskforge.Task_Forge.Model.User;
-import com.taskforge.Task_Forge.Repository.UserRepository;
-import com.taskforge.Task_Forge.Utils.JwtUtils;
+import com.taskforge.task_forge.DTO.AuthRequest;
+import com.taskforge.task_forge.DTO.AuthResponse;
+import com.taskforge.task_forge.DTO.RegisterRequest;
+import com.taskforge.task_forge.Model.User;
+import com.taskforge.task_forge.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AuthService {
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private JwtUtils jwtUtils;
+    private PasswordEncoder passwordEncoder;
 
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private com.example.agiletool.util.JwtUtil jwtUtils;
 
-    public String signup(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public String register(RegisterRequest request){
+        if(userRepository.findByEmail(request.getEmail()).isPresent()){
+            throw new RuntimeException("Email already registered");
+        }
+
+        User user = new User();
+        user.setUsername(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole());
         userRepository.save(user);
-        return "User Registered Successfully";
+        return "User registered successfully";
     }
 
-    public String login(String email, String password) {
-        Optional<User> existingUser = userRepository.findByEmail(email);
-        if (existingUser.isPresent() && passwordEncoder.matches(password, existingUser.get().getPassword())){
-            return jwtUtils.generateToken(existingUser.get().getId(), email);
-        }
-        throw new InvalidCredentialsException("Invalid Credentials");
-    }
 
-    public Optional<User> getProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public AuthResponse login(AuthRequest request){
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return Optional.empty();//
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+
+            if(passwordEncoder.matches(request.getPassword(), user.getPassword())){
+                String token = jwtUtils.generateToken(user.getEmail());
+                return new AuthResponse();
+            }
         }
 
-        String username = authentication.getName();
-        return userRepository.findByEmail(username);
+        throw new RuntimeException("Invalid email or password");
     }
+
+
 }

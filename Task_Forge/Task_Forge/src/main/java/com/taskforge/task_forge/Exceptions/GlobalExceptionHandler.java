@@ -1,4 +1,4 @@
-package com.taskforge.Task_Forge.Exceptions;
+package com.taskforge.task_forge.Exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
-package com.taskforge.Task_Forge.Controller;
+package com.taskforge.task_forge.Controller;
 
-import com.taskforge.Task_Forge.MailService.EmailService;
+import com.taskforge.task_forge.MailService.EmailService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -1,7 +1,7 @@
-package com.taskforge.Task_Forge.Controller;
+package com.taskforge.task_forge.Controller;
 
-import com.taskforge.Task_Forge.Model.User;
-import com.taskforge.Task_Forge.Service.UserService;
+import com.taskforge.task_forge.Model.User;
+import com.taskforge.task_forge.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +19,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(){
+
         return ResponseEntity.ok(userService.getAllUsers());
     }
 

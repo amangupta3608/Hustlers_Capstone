@@ -1,4 +1,4 @@
-package com.taskforge.Task_Forge.ENUM;
+package com.taskforge.task_forge.ENUM;
 
 public enum Role {
     ADMIN,

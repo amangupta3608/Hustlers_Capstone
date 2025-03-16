@@ -1,10 +1,11 @@
-package com.taskforge.Task_Forge.Model;
+package com.taskforge.task_forge.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.UUID;
+import com.taskforge.task_forge.ENUM.Role;
 
-import javax.management.relation.Role;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity
 @Data
